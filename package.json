@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "cd terraform && source ../.env && terraform apply -auto-approve"
   },
   "dependencies": {
     "preact": "^10.28.0"
