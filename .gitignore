@@ -26,3 +26,5 @@ dist-ssr
 terraform.tfstate
 terraform.tfvars
 *.tfstate.backup
+
+.env
