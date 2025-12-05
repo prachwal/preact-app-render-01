@@ -1,10 +1,22 @@
+/**
+ * Main application component demonstrating reactive API integration with comprehensive debugging.
+ * Features interactive counter, API call functionality, and real-time state visualization.
+ * @packageDocumentation
+ */
+
 import preactLogo from '../assets/preact.svg'
 import viteLogo from '/vite.svg'
 import '../app.css'
 import { count, doubleCount, apiMessage, apiLoading, apiError, hasApiData, hasApiError, apiStatus, debugging, fetchHelloMessage } from '../store'
 
+/**
+ * Root application component that renders the entire UI.
+ * Includes counter functionality, API operations, and comprehensive debug information display.
+ * Demonstrates reactive state management using Preact Signals and API integration.
+ *
+ * @returns JSX element representing the complete application interface
+ */
 export function App() {
-
   return (
     <>
       <div>
@@ -16,6 +28,8 @@ export function App() {
         </a>
       </div>
       <h1>Vite + Preact</h1>
+
+      {/* Counter section demonstrating basic reactive state */}
       <div class="card">
         <button onClick={() => count.value += 1}>
           count is {count.value}
@@ -27,11 +41,14 @@ export function App() {
           Double count: {doubleCount.value}
         </p>
       </div>
+
+      {/* API section demonstrating reactive API integration */}
       <div class="card">
         <button onClick={fetchHelloMessage} disabled={apiLoading.value}>
           {apiLoading.value ? 'Loading...' : 'Call API'}
         </button>
-        {/* Comprehensive Debug Info */}
+
+        {/* Comprehensive Debug Info - Real-time API state visualization */}
         <div style="font-size: 12px; color: #666; margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
           <h4 style="margin: 0 0 5px 0; color: #333;">Debug State:</h4>
           <div><strong>Loading:</strong> {String(apiLoading.value)}</div>
@@ -42,17 +59,23 @@ export function App() {
           <div><strong>Status:</strong> {apiStatus.value}</div>
           <div><strong>Data Value:</strong> {JSON.stringify(debugging.helloMessageState.data.value)}</div>
         </div>
+
+        {/* Conditional rendering of API results - only shown when data exists */}
         {apiMessage.value && apiMessage.value.trim() && (
           <p>
             API Response: <code>{apiMessage.value}</code>
           </p>
         )}
+
+        {/* Conditional rendering of errors - only shown when error exists */}
         {apiError.value && apiError.value.trim() && (
           <p style="color: red;">
             Error: {apiError.value}
           </p>
         )}
       </div>
+
+      {/* Footer with documentation links */}
       <p>
         Check out{' '}
         <a
