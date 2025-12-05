@@ -1,12 +1,21 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/preact'
+import { render, screen, fireEvent } from '@testing-library/preact'
 import { App } from './App'
 
-// Mock the entire store module with inline definitions
+// Mock the entire store (including counter store and hello store exports)
 vi.mock('../store', () => {
   return {
     count: { value: 0 },
     doubleCount: { value: 0 },
+    helloMessageState: {
+      data: { value: null },
+      loading: { value: false },
+      error: { value: '' },
+      hasData: { value: false },
+      hasError: { value: false },
+      status: { value: 'idle' },
+    },
+    fetchHelloMessage: vi.fn(),
     apiMessage: { value: '' },
     apiLoading: { value: false },
     apiError: { value: '' },
@@ -18,7 +27,6 @@ vi.mock('../store', () => {
         data: { value: null },
       },
     },
-    fetchHelloMessage: vi.fn(),
   }
 })
 
@@ -27,8 +35,9 @@ describe('App Component', () => {
     render(<App />)
 
     expect(screen.getByText('Vite + Preact')).toBeInTheDocument()
-    expect(screen.getByText('count is 0')).toBeInTheDocument()
-    expect(screen.getByText('Call API')).toBeInTheDocument()
+    expect(screen.getByText('Counter Demo')).toBeInTheDocument()
+    expect(screen.getByText('Hello API')).toBeInTheDocument()
+    expect(screen.getByText('Base64 Encoder')).toBeInTheDocument()
   })
 
 
@@ -50,13 +59,22 @@ describe('App Component', () => {
     expect(screen.getByText('Double count: 0')).toBeInTheDocument()
   })
 
-  it('should display both counter and API sections', () => {
+  it('should display counter section by default', () => {
     render(<App />)
 
-    // Counter section
+    // Counter section is shown by default
     expect(screen.getByText('count is 0')).toBeInTheDocument()
+    expect(screen.getByText('Double count: 0')).toBeInTheDocument()
+  })
 
-    // API section
+  it('should display API section when navigating to Hello', () => {
+    render(<App />)
+
+    // Switch to Hello API page
+    const helloTab = screen.getByText('Hello API')
+    fireEvent.click(helloTab)
+
+    // Now API section should be visible
     expect(screen.getByText('Call API')).toBeInTheDocument()
     expect(screen.getByText('Debug State:')).toBeInTheDocument()
   })
@@ -74,6 +92,10 @@ describe('App Component', () => {
   it('should show loading state correctly', () => {
     render(<App />)
 
+    // Switch to Hello API page
+    const helloTab = screen.getByText('Hello API')
+    fireEvent.click(helloTab)
+
     // Button should not be disabled initially
     const button = screen.getByText('Call API')
     expect(button).not.toBeDisabled()
@@ -81,6 +103,10 @@ describe('App Component', () => {
 
   it('should not show API response when message is empty', () => {
     render(<App />)
+
+    // Switch to Hello API page
+    const helloTab = screen.getByText('Hello API')
+    fireEvent.click(helloTab)
 
     // Should not show the response paragraph when message is empty
     expect(screen.queryByText('API Response:')).not.toBeInTheDocument()

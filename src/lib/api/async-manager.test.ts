@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AsyncActionManager } from './async-manager'
 import { BaseApiState } from './state-manager'
-import type { IApiService } from './types'
 
-// Mock API service
 const mockApiService = {
   getHello: vi.fn(),
+  encodeBase64: vi.fn(),
 }
 
 const mockFetch = vi.fn()

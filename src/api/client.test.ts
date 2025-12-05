@@ -14,12 +14,14 @@ describe('API Client Exports', () => {
     it('should export correct endpoints', () => {
       expect(API_ENDPOINTS).toEqual({
         hello: '/hello',
+        encodeBase64: '/base64/encode',
       })
     })
 
     it('should export correct API paths', () => {
       expect(API_PATHS).toEqual({
         hello: '/api/hello',
+        encodeBase64: '/api/base64/encode',
       })
     })
   })

@@ -1,25 +1,35 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --app-color-text: rgba(255, 255, 255, 0.87);
+  --app-color-bg: #242424;
+  --app-color-primary: #646cff;
+  --app-color-primary-hover: #535bf2;
+  --app-color-primary-light-hover: #747bff;
+  --app-color-secondary: #673ab8aa;
+  --app-color-button-bg: #1a1a1a;
+  --app-color-button-bg-light: #f9f9f9;
+  --app-color-bg-light: #ffffff;
+  --app-color-text-light: #213547;
+  --app-color-gray: #888;
+  --app-color-text-secondary: rgba(255, 255, 255, 0.6);
+  --app-color-border: rgba(255, 255, 255, 0.2);
+  --app-bg-input: rgba(255, 255, 255, 0.1);
+  --app-color-surface: rgba(255, 255, 255, 0.1);
+  --app-color-surface-hover: rgba(255, 255, 255, 0.2);
+  --app-bg-code: rgba(255, 255, 255, 0.1);
+  --app-color-success: #28a745;
+  --app-color-success-hover: #218838;
+  --app-color-info: #17a2b8;
+  --app-color-info-hover: #138496;
+  --app-color-secondary-bg: #6c757d;
+  --app-color-secondary-hover: #545b62;
+  --app-color-disabled-bg: rgba(255, 255, 255, 0.2);
+  --app-color-disabled-text: rgba(255, 255, 255, 0.5);
+  --app-color-error-bg: rgba(220, 53, 69, 0.1);
+  --app-color-error-text: #ff6b7d;
+  --app-color-error-border: rgba(220, 53, 69, 0.3);
+  --app-font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --app-line-height: 1.5;
+  --app-font-weight: 400;
 }
 
 body {
@@ -28,6 +38,25 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: var(--app-font-family);
+  line-height: var(--app-line-height);
+  font-weight: var(--app-font-weight);
+  color: var(--app-color-text);
+  background-color: var(--app-color-bg);
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: var(--app-color-primary);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--app-color-primary-hover);
 }
 
 h1 {
@@ -42,12 +71,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--app-color-button-bg);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--app-color-primary);
 }
 button:focus,
 button:focus-visible {
@@ -56,13 +85,13 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --app-color-text: var(--app-color-text-light);
+    --app-color-bg: var(--app-color-bg-light);
   }
   a:hover {
-    color: #747bff;
+    color: var(--app-color-primary-light-hover);
   }
   button {
-    background-color: #f9f9f9;
+    background-color: var(--app-color-button-bg-light);
   }
 }

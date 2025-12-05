@@ -5,9 +5,9 @@ export type {
   ApiResponse,
   AsyncActionResult,
   IApiState,
-  IApiService,
-  HelloResponse
 } from './types'
+
+export type { IApiService } from './contracts'
 
 // Classes
 export { BaseApiState } from './state-manager'

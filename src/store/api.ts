@@ -1,45 +1,49 @@
 /**
- * Specific API store implementation using reusable library components.
- * Provides reactive state management for API operations with computed helpers for component access.
+ * Main API store aggregation and configuration.
+ * Provides a centralized interface to all API-related state and actions.
+ * Acts as a facade over individual store slices while maintaining backward compatibility.
  * @packageDocumentation
  */
 
-import { computed } from '@preact/signals'
-import { BaseApiState, setDefaultApiService, createApiAction } from '../lib'
-import type { HelloResponse } from '../lib'
+import { setDefaultApiService } from '../lib'
 import { api } from '../api'
 
 // Initialize the default API service for the app
 setDefaultApiService(api)
 
-// Create state manager for hello message
-export const helloMessageState = new BaseApiState<HelloResponse>(null as any)
+// Re-export everything from the hello store slice
+// This maintains backward compatibility while consolidating implementation
+export type { HelloResponse } from './hello'
 
-// Create the fetch action using the generic creator
-export const fetchHelloMessage = createApiAction(
-  'getHello' as keyof typeof api,
+export {
   helloMessageState,
-  // No transformation needed - data comes as HelloResponse
-  (data) => data
-)
+  fetchHelloMessage,
+  helloMessage as apiMessage,
+  helloLoading as apiLoading,
+  helloError as apiError,
+  hasHelloData as hasApiData,
+  hasHelloError as hasApiError,
+  helloStatus as apiStatus,
+  debugging,
+} from './hello'
 
-// Computed helpers for easy component access
-/** Computed signal providing the current API message text, or empty string if no data */
-export const apiMessage = computed(() => helloMessageState.data.value?.message || '')
-/** Computed signal indicating if API operation is currently in progress */
-export const apiLoading = computed(() => helloMessageState.loading.value)
-/** Computed signal containing current error message, or empty string if no error */
-export const apiError = computed(() => helloMessageState.error.value)
-/** Computed signal indicating whether API response data is available */
-export const hasApiData = computed(() => helloMessageState.hasData.value)
-/** Computed signal indicating whether an error occurred in the last API operation */
-export const hasApiError = computed(() => helloMessageState.hasError.value)
-/** Computed signal providing the overall status: 'idle', 'loading', 'success', or 'error' */
-export const apiStatus = computed(() => helloMessageState.status.value)
+// Re-export base64 functionality
+export type { EncodeBase64Request, EncodeBase64Response } from './base64'
 
-// For easy testing and debugging, export the local state
-export const debugging = { helloMessageState }
+export {
+  encodeBase64State,
+  encodeBase64ToText,
+  encodedBase64,
+  originalEncodedText,
+  encodeBase64Loading,
+  encodeBase64Error,
+  hasBase64Result,
+  base64Debugging,
+} from './base64'
 
-// Example: Add more API endpoints easily
-// export const userProfileState = new BaseApiState<UserProfile>({ name: '', email: '' })
-// export const fetchUserProfile = createApiAction('getUserProfile' as keyof typeof api, userProfileState)
+// Example: Add more API store slices by importing and re-exporting
+// export * from './users'
+// export * from './profile'
+
+// Future API endpoints can be easily added here:
+// export { userProfileState, fetchUserProfile, userMessage, userLoading } from './user'

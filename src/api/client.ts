@@ -4,6 +4,9 @@
  * @packageDocumentation
  */
 
+import { HELLO_API_ENDPOINTS, type HelloResponse } from '../store/hello'
+import { BASE64_API_ENDPOINTS, type EncodeBase64Request, type EncodeBase64Response } from '../store/base64'
+
 /**
  * Generic API response interface for client-level operations.
  * Note: This is separate from the app-level ApiResponse interface and focuses on HTTP responses.
@@ -125,10 +128,11 @@ class ApiClient {
  * Configuration object defining all available API endpoints.
  * Centralizes endpoint path management for consistency and maintainability.
  * Paths are relative to the API base URL and should not include the '/api' prefix.
+ * Built from feature-specific endpoint configurations.
  */
 const API_ENDPOINTS = {
-  /** Endpoint for fetching hello message */
-  hello: '/hello',
+  ...HELLO_API_ENDPOINTS,
+  ...BASE64_API_ENDPOINTS,
   // users: '/users',
   // profile: '/profile',
 } as const
@@ -140,14 +144,7 @@ const API_ENDPOINTS = {
  */
 // type ApiEndpoint = typeof API_ENDPOINTS[keyof typeof API_ENDPOINTS]
 
-/**
- * Response type for the hello API endpoint.
- * Defines the structure of data returned by the greeting service.
- */
-interface HelloResponse {
-  /** The greeting message text */
-  message: string
-}
+// HelloResponse now imported from store/hello
 
 /**
  * Specific API endpoint response types (for future expansion).
@@ -190,6 +187,23 @@ class ApiService {
    */
   async getHello(): Promise<ApiResponse<HelloResponse>> {
     return this.client.get<HelloResponse>(API_ENDPOINTS.hello)  // '/hello'
+  }
+
+  /**
+   * Encodes text to base64 format.
+   * Makes a POST request to the base64 encode endpoint with text data.
+   * @param data - Request data containing the text to encode
+   * @returns Promise resolving to ApiResponse containing EncodeBase64Response
+   * @example
+   * ```typescript
+   * const response = await api.encodeBase64({ text: 'Hello World' })
+   * if (response.data) {
+   *   console.log(response.data.base64) // "SGVsbG8gV29ybGQ="
+   * }
+   * ```
+   */
+  async encodeBase64(data: EncodeBase64Request): Promise<ApiResponse<EncodeBase64Response>> {
+    return this.client.post<EncodeBase64Response>(API_ENDPOINTS.encodeBase64, data)
   }
 
   /**

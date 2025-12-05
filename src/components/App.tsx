@@ -4,19 +4,24 @@
  * @packageDocumentation
  */
 
+import { useState } from 'preact/hooks'
 import preactLogo from '../assets/preact.svg'
 import viteLogo from '/vite.svg'
-import '../app.css'
-import { count, doubleCount, apiMessage, apiLoading, apiError, hasApiData, hasApiError, apiStatus, debugging, fetchHelloMessage } from '../store'
+import { CounterPage } from './counter'
+import { HelloPage } from './hello'
+import { Base64Page } from './base64'
+import './App.css'
 
 /**
  * Root application component that renders the entire UI.
- * Includes counter functionality, API operations, and comprehensive debug information display.
+ * Includes counter functionality, API operations for both Hello and Base64 services,
+ * with navigation between different demo pages.
  * Demonstrates reactive state management using Preact Signals and API integration.
  *
  * @returns JSX element representing the complete application interface
  */
 export function App() {
+  const [currentPage, setCurrentPage] = useState<'counter' | 'hello' | 'base64'>('counter')
   return (
     <>
       <div>
@@ -29,51 +34,36 @@ export function App() {
       </div>
       <h1>Vite + Preact</h1>
 
-      {/* Counter section demonstrating basic reactive state */}
-      <div class="card">
-        <button onClick={() => count.value += 1}>
-          count is {count.value}
-        </button>
-        <p>
-          Edit <code>src/app.tsx</code> and save to test HMR
-        </p>
-        <p>
-          Double count: {doubleCount.value}
-        </p>
+      {/* Navigation between demo pages */}
+      <div class="navigation">
+        <nav class="nav-tabs">
+          <button
+            class={currentPage === 'counter' ? 'nav-tab active' : 'nav-tab'}
+            onClick={() => setCurrentPage('counter')}
+          >
+            Counter Demo
+          </button>
+          <button
+            class={currentPage === 'hello' ? 'nav-tab active' : 'nav-tab'}
+            onClick={() => setCurrentPage('hello')}
+          >
+            Hello API
+          </button>
+          <button
+            class={currentPage === 'base64' ? 'nav-tab active' : 'nav-tab'}
+            onClick={() => setCurrentPage('base64')}
+          >
+            Base64 Encoder
+          </button>
+        </nav>
       </div>
 
-      {/* API section demonstrating reactive API integration */}
-      <div class="card">
-        <button onClick={fetchHelloMessage} disabled={apiLoading.value}>
-          {apiLoading.value ? 'Loading...' : 'Call API'}
-        </button>
+      {/* Page content based on current selection */}
+      {currentPage === 'counter' && <CounterPage />}
 
-        {/* Comprehensive Debug Info - Real-time API state visualization */}
-        <div style="font-size: 12px; color: #666; margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
-          <h4 style="margin: 0 0 5px 0; color: #333;">Debug State:</h4>
-          <div><strong>Loading:</strong> {String(apiLoading.value)}</div>
-          <div><strong>Error:</strong> "{apiError.value}"</div>
-          <div><strong>Message:</strong> "{apiMessage.value}"</div>
-          <div><strong>Has Data:</strong> {String(hasApiData.value)}</div>
-          <div><strong>Has Error:</strong> {String(hasApiError.value)}</div>
-          <div><strong>Status:</strong> {apiStatus.value}</div>
-          <div><strong>Data Value:</strong> {JSON.stringify(debugging.helloMessageState.data.value)}</div>
-        </div>
+      {currentPage === 'hello' && <HelloPage />}
 
-        {/* Conditional rendering of API results - only shown when data exists */}
-        {apiMessage.value && apiMessage.value.trim() && (
-          <p>
-            API Response: <code>{apiMessage.value}</code>
-          </p>
-        )}
-
-        {/* Conditional rendering of errors - only shown when error exists */}
-        {apiError.value && apiError.value.trim() && (
-          <p style="color: red;">
-            Error: {apiError.value}
-          </p>
-        )}
-      </div>
+      {currentPage === 'base64' && <Base64Page />}
 
       {/* Footer with documentation links */}
       <p>

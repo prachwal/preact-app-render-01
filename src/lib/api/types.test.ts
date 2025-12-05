@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import type { ApiResponse, AsyncActionResult, IApiState, IApiService, HelloResponse } from './types'
+import type { ApiResponse, AsyncActionResult } from './types'
+import type { HelloResponse } from '../../store/hello'
 
 describe('API Types', () => {
   it('should have proper type definitions', () => {

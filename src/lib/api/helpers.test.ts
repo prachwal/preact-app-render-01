@@ -6,6 +6,7 @@ import type { IApiState } from './types'
 const mockApiService = {
   getHello: vi.fn(),
   getUsers: vi.fn(),
+  encodeBase64: vi.fn(),
 }
 
 describe('API Helpers', () => {

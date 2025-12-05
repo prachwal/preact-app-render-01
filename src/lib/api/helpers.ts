@@ -4,7 +4,8 @@
  * @packageDocumentation
  */
 
-import type { IApiState, IApiService, AsyncActionResult } from './types'
+import type { IApiState, AsyncActionResult } from './types'
+import type { IApiService } from './contracts'
 import { AsyncActionManager } from './async-manager'
 
 // Global instance - can be replaced for testing or different configurations
@@ -43,35 +44,51 @@ export function setDefaultApiService(apiService: IApiService) {
 /**
  * Creates a reusable API action function that can be called to execute API operations.
  * Uses the globally configured AsyncActionManager and provides type-safe operation execution.
+ * Supports both GET operations (with optional data transformation) and POST/PUT operations (with payload).
  * @template T - The type of data returned by the API operation
  * @template K - The type of API method key (constrained to available methods)
  * @param apiMethod - The name of the API method to call (must exist on the API service)
  * @param stateManager - The state manager instance to update during the operation
- * @param transformData - Optional function to transform raw API response data
+ * @param transformOrPayload - Optional: either transform function (for GET) or payload (for POST/PUT)
+ * @param payload - Optional payload to send with POST/PUT requests (separated for clarity)
  * @returns A function that can be called to execute the API action
  * @throws Error if no default API service is configured
  * @example
  * ```typescript
  * import { createApiAction } from './helpers'
- * import { helloMessageState } from './store'
  *
- * export const fetchHelloMessage = createApiAction(
+ * // GET without transform
+ * export const fetchHello = createApiAction('getHello', helloState)
+ *
+ * // GET with transform
+ * export const fetchHelloUpper = createApiAction(
  *   'getHello',
- *   helloMessageState,
+ *   helloState,
  *   (data) => ({ message: data.message.toUpperCase() })
  * )
  *
- * // Later in a component:
- * const result = await fetchHelloMessage()
+ * // POST with payload
+ * export const encodeBase64 = createApiAction(
+ *   'encodeBase64',
+ *   encodeState,
+ *   { text: 'Hello World' }, // payload
+ *   (data) => ({ ...data, originalText: 'Hello World' })
+ * )
  * ```
  */
 export function createApiAction<T, K extends keyof IApiService>(
   apiMethod: K,
   stateManager: IApiState<T>,
-  transformData?: (data: any) => T
-) {
+  transformOrPayload?: ((data: any) => T) | Parameters<IApiService[K]>[0],
+  maybeTransform?: (data: any) => T
+): () => Promise<AsyncActionResult<T>> {
+  // Determine if transformOrPayload is a transform function or a payload
+  const isTransformFunction = typeof transformOrPayload === 'function'
+  const transformData = isTransformFunction ? transformOrPayload : maybeTransform
+  const payload = isTransformFunction ? undefined : transformOrPayload
+
   return async (): Promise<AsyncActionResult<T>> => {
-    return getDefaultAsyncManager().executeAsyncAction(apiMethod, stateManager, transformData)
+    return getDefaultAsyncManager().executeAsyncAction(apiMethod, stateManager, transformData, payload)
   }
 }
 

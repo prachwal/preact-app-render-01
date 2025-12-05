@@ -1,5 +1,6 @@
 /**
- * Generic types and interfaces for API management
+ * Core types and interfaces for API management.
+ * Contains generic API response types and state management interfaces.
  * @packageDocumentation
  */
 
@@ -58,24 +59,4 @@ export interface IApiState<T = unknown> {
   setData(data: T): void
   /** Sets the error message and transitions to 'error' status */
   setError(error: string): void
-}
-
-/**
- * Interface for API services providing typed methods for API operations.
- * Used for dependency injection and type-safe API interactions.
- * Can be extended with additional API endpoint methods.
- */
-export interface IApiService {
-  /** Fetches hello message from the API */
-  getHello(): Promise<ApiResponse<any>>
-  // Can be extended with more methods
-}
-
-/**
- * Response type for the hello API endpoint.
- * Contains the message returned by the greeting service.
- */
-export interface HelloResponse {
-  /** The hello message text */
-  message: string
 }

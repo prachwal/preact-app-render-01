@@ -4,7 +4,8 @@
  * @packageDocumentation
  */
 
-import type { IApiState, IApiService, AsyncActionResult } from './types'
+import type { IApiState, AsyncActionResult } from './types'
+import type { IApiService } from './contracts'
 
 /**
  * Generic async action manager that coordinates API calls with state management.
@@ -27,7 +28,7 @@ export class AsyncActionManager {
    * This method handles the complete API operation lifecycle:
    * 1. Clears and sets loading state
    * 2. Calls the API method dynamically with proper context binding
-   * 3. Handles success and error responses
+   * 3. Handles success and error responses with optional payload for mutations (POST/PUT)
    * 4. Applies data transformation if provided
    * 5. Updates state manager and returns result
    *
@@ -36,21 +37,31 @@ export class AsyncActionManager {
    * @param apiMethod - The name of the API method to call
    * @param stateManager - The state manager instance to update during the operation
    * @param transformData - Optional function to transform the raw API response data
+   * @param payload - Optional payload to pass to the API method (for POST/PUT operations)
    * @returns Promise resolving to the operation result (success with data or failure with error)
    *
    * @example
    * ```typescript
+   * // GET request (no payload)
    * const result = await manager.executeAsyncAction(
    *   'getHello',
-   *   helloState,
-   *   (data) => ({ message: data.message.toUpperCase() })
+   *   helloState
+   * )
+   *
+   * // POST request (with payload)
+   * const result = await manager.executeAsyncAction(
+   *   'encodeBase64',
+   *   encodeState,
+   *   undefined, // no transform
+   *   { text: 'Hello World' } // payload
    * )
    * ```
    */
   async executeAsyncAction<T, K extends keyof IApiService>(
     apiMethod: K,
     stateManager: IApiState<T>,
-    transformData?: (data: any) => T
+    transformData?: (data: any) => T,
+    payload?: Parameters<IApiService[K]>[0]
   ): Promise<AsyncActionResult<T>> {
     // Reset state
     stateManager.clear()
@@ -58,8 +69,8 @@ export class AsyncActionManager {
 
     try {
       // Call API method dynamically - bind 'this' to preserve context
-      const method = (this.apiService[apiMethod] as () => Promise<any>).bind(this.apiService)
-      const response = await method()
+      const method = (this.apiService[apiMethod] as (...args: any[]) => Promise<any>).bind(this.apiService)
+      const response = payload ? await method(payload) : await method()
 
       if (response.data) {
         const processedData = transformData ? transformData(response.data) : (response.data as T)
