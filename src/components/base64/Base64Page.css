@@ -33,8 +33,8 @@
 
 .input-controls {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
 }
 
 .encode-btn {
@@ -70,14 +70,14 @@
 }
 
 .sample-texts {
-  margin-top: 15px;
+  margin-top: var(--space-sm);
 }
 
 .sample-buttons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
 }
 
 .sample-btn {

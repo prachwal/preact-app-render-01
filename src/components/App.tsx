@@ -1,3 +1,7 @@
+// ============================================
+// App.tsx - Główny komponent z hamburgerem
+// ============================================
+
 /**
  * Main application component demonstrating reactive API integration with comprehensive debugging.
  * Features interactive counter, API call functionality, and real-time state visualization.
@@ -26,9 +30,40 @@ const Base64Page = lazy(() => import('./base64').then(module => ({ default: modu
  */
 export function App() {
   const [currentPage, setCurrentPage] = useState<'counter' | 'hello' | 'base64'>('counter')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleNavigation = (page: 'counter' | 'hello' | 'base64') => {
+    setCurrentPage(page)
+    setSidebarOpen(false) // Close sidebar on mobile after navigation
+  }
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
+
+  const closeSidebar = () => {
+    setSidebarOpen(false)
+  }
+
   return (
     <div class="dashboard">
+      {/* Overlay for mobile sidebar */}
+      {sidebarOpen && (
+        <div class="sidebar-overlay" onClick={closeSidebar}></div>
+      )}
+
       <header class="header">
+        {/* Hamburger menu button - visible only on mobile */}
+        <button
+          class="hamburger-btn"
+          onClick={toggleSidebar}
+          aria-label="Toggle menu"
+        >
+          <span class="hamburger-icon"></span>
+          <span class="hamburger-icon"></span>
+          <span class="hamburger-icon"></span>
+        </button>
+
         <div class="logo-section">
           <a href="https://vite.dev" target="_blank">
             <img src={viteLogo} class="logo" alt="Vite logo" />
@@ -40,12 +75,11 @@ export function App() {
         <h1>Vite + Preact</h1>
       </header>
 
-      <div class="navigation">
-        <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      </div>
 
-      <aside class="sidebar">
-        <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
+      {/* Sidebar - slides in on mobile, always visible on desktop */}
+      <aside class={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
+        <Navigation currentPage={currentPage} setCurrentPage={handleNavigation} />
       </aside>
 
       <main class="main-content">

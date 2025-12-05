@@ -1,3 +1,7 @@
+// ============================================
+// Navigation.tsx - Zaktualizowany komponent
+// ============================================
+
 import { memo } from 'preact/compat'
 
 interface NavigationProps {
