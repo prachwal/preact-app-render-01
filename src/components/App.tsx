@@ -5,12 +5,16 @@
  */
 
 import { useState } from 'preact/hooks'
+import { lazy, Suspense } from 'preact/compat'
 import preactLogo from '../assets/preact.svg'
 import viteLogo from '/vite.svg'
-import { CounterPage } from './counter'
-import { HelloPage } from './hello'
-import { Base64Page } from './base64'
+import { Navigation } from './shared'
 import './App.css'
+
+// Lazy load components
+const CounterPage = lazy(() => import('./counter').then(module => ({ default: module.CounterPage })))
+const HelloPage = lazy(() => import('./hello').then(module => ({ default: module.HelloPage })))
+const Base64Page = lazy(() => import('./base64').then(module => ({ default: module.Base64Page })))
 
 /**
  * Root application component that renders the entire UI.
@@ -23,62 +27,50 @@ import './App.css'
 export function App() {
   const [currentPage, setCurrentPage] = useState<'counter' | 'hello' | 'base64'>('counter')
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <h1>Vite + Preact</h1>
+    <div class="dashboard">
+      <header class="header">
+        <div class="logo-section">
+          <a href="https://vite.dev" target="_blank">
+            <img src={viteLogo} class="logo" alt="Vite logo" />
+          </a>
+          <a href="https://preactjs.com" target="_blank">
+            <img src={preactLogo} class="logo preact" alt="Preact logo" />
+          </a>
+        </div>
+        <h1>Vite + Preact</h1>
+      </header>
 
-      {/* Navigation between demo pages */}
       <div class="navigation">
-        <nav class="nav-tabs">
-          <button
-            class={currentPage === 'counter' ? 'nav-tab active' : 'nav-tab'}
-            onClick={() => setCurrentPage('counter')}
-          >
-            Counter Demo
-          </button>
-          <button
-            class={currentPage === 'hello' ? 'nav-tab active' : 'nav-tab'}
-            onClick={() => setCurrentPage('hello')}
-          >
-            Hello API
-          </button>
-          <button
-            class={currentPage === 'base64' ? 'nav-tab active' : 'nav-tab'}
-            onClick={() => setCurrentPage('base64')}
-          >
-            Base64 Encoder
-          </button>
-        </nav>
+        <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
 
-      {/* Page content based on current selection */}
-      {currentPage === 'counter' && <CounterPage />}
+      <aside class="sidebar">
+        <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      </aside>
 
-      {currentPage === 'hello' && <HelloPage />}
+      <main class="main-content">
+        <Suspense fallback={<div class="loading">Loading...</div>}>
+          {currentPage === 'counter' && <CounterPage />}
+          {currentPage === 'hello' && <HelloPage />}
+          {currentPage === 'base64' && <Base64Page />}
+        </Suspense>
+      </main>
 
-      {currentPage === 'base64' && <Base64Page />}
-
-      {/* Footer with documentation links */}
-      <p>
-        Check out{' '}
-        <a
-          href="https://preactjs.com/guide/v10/getting-started#create-a-vite-powered-preact-app"
-          target="_blank"
-        >
-          create-preact
-        </a>
-        , the official Preact + Vite starter
-      </p>
-      <p class="read-the-docs">
-        Click on the Vite and Preact logos to learn more
-      </p>
-    </>
+      <footer class="footer">
+        <p>
+          Check out{' '}
+          <a
+            href="https://preactjs.com/guide/v10/getting-started#create-a-vite-powered-preact-app"
+            target="_blank"
+          >
+            create-preact
+          </a>
+          , the official Preact + Vite starter
+        </p>
+        <p class="read-the-docs">
+          Click on the Vite and Preact logos to learn more
+        </p>
+      </footer>
+    </div>
   )
 }

@@ -1,35 +1,52 @@
 :root {
-  --app-color-text: rgba(255, 255, 255, 0.87);
-  --app-color-bg: #242424;
-  --app-color-primary: #646cff;
-  --app-color-primary-hover: #535bf2;
-  --app-color-primary-light-hover: #747bff;
-  --app-color-secondary: #673ab8aa;
-  --app-color-button-bg: #1a1a1a;
-  --app-color-button-bg-light: #f9f9f9;
-  --app-color-bg-light: #ffffff;
-  --app-color-text-light: #213547;
-  --app-color-gray: #888;
-  --app-color-text-secondary: rgba(255, 255, 255, 0.6);
-  --app-color-border: rgba(255, 255, 255, 0.2);
-  --app-bg-input: rgba(255, 255, 255, 0.1);
-  --app-color-surface: rgba(255, 255, 255, 0.1);
-  --app-color-surface-hover: rgba(255, 255, 255, 0.2);
-  --app-bg-code: rgba(255, 255, 255, 0.1);
-  --app-color-success: #28a745;
-  --app-color-success-hover: #218838;
-  --app-color-info: #17a2b8;
-  --app-color-info-hover: #138496;
-  --app-color-secondary-bg: #6c757d;
-  --app-color-secondary-hover: #545b62;
-  --app-color-disabled-bg: rgba(255, 255, 255, 0.2);
-  --app-color-disabled-text: rgba(255, 255, 255, 0.5);
-  --app-color-error-bg: rgba(220, 53, 69, 0.1);
-  --app-color-error-text: #ff6b7d;
-  --app-color-error-border: rgba(220, 53, 69, 0.3);
-  --app-font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --app-line-height: 1.5;
-  --app-font-weight: 400;
+  /* Base color palette */
+  --color-primary: #646cff;
+  --color-primary-hover: #535bf2;
+  --color-bg: #242424;
+  --color-surface: rgba(255, 255, 255, 0.1);
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-text-secondary: rgba(255, 255, 255, 0.6);
+  --color-border: rgba(255, 255, 255, 0.2);
+
+  /* Semantic colors */
+  --color-success: #28a745;
+  --color-error: #dc3545;
+  --color-info: #17a2b8;
+
+  /* Typography */
+  --font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --line-height: 1.5;
+  --font-weight: 400;
+
+  /* Spacing system */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+
+  /* Border radius system */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* Additional semantic colors for components */
+  --color-success-hover: #218838;
+  --color-error-bg: #f8d7da;
+  --color-error-text: #721c24;
+  --color-error-border: #f5c6cb;
+  --color-info-hover: #138496;
+  --color-disabled-bg: rgba(255, 255, 255, 0.3);
+  --color-disabled-text: rgba(255, 255, 255, 0.5);
+  --color-secondary-bg: rgba(0, 123, 255, 1);
+  --color-secondary-hover: #0056b3;
+  --color-surface-hover: rgba(255, 255, 255, 0.2);
+  --color-text-light: #213547;
+  --color-gray: rgba(0, 0, 0, 0.6);
+  --color-bg-light: #ffffff;
+
+  /* Responsive typography */
+  --font-size-base: clamp(0.875rem, 0.8rem + 0.4vw, 1rem);
+  --font-size-lg: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  --font-size-xl: clamp(1.5rem, 1.2rem + 1.5vw, 3.2rem);
 }
 
 body {
@@ -38,11 +55,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  font-family: var(--app-font-family);
-  line-height: var(--app-line-height);
-  font-weight: var(--app-font-weight);
-  color: var(--app-color-text);
-  background-color: var(--app-color-bg);
+  font-family: var(--font-family);
+  line-height: var(--line-height);
+  font-weight: var(--font-weight);
+  color: var(--color-text);
+  background-color: var(--color-bg);
   color-scheme: light dark;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -52,15 +69,15 @@ body {
 
 a {
   font-weight: 500;
-  color: var(--app-color-primary);
+  color: var(--color-primary);
   text-decoration: inherit;
 }
 a:hover {
-  color: var(--app-color-primary-hover);
+  color: var(--color-primary-hover);
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: var(--font-size-xl);
   line-height: 1.1;
 }
 
@@ -68,30 +85,45 @@ button {
   border-radius: 8px;
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
-  font-size: 1em;
+  font-size: var(--font-size-base);
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--app-color-button-bg);
+  background-color: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: var(--app-color-primary);
+  border-color: var(--color-primary);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    --app-color-text: var(--app-color-text-light);
-    --app-color-bg: var(--app-color-bg-light);
+    --color-text: #213547;
+    --color-bg: #ffffff;
+    --color-surface: rgba(0, 0, 0, 0.05);
+    --color-border: rgba(0, 0, 0, 0.2);
   }
+
   a:hover {
-    color: var(--app-color-primary-light-hover);
+    color: #747bff;
   }
+
   button {
-    background-color: var(--app-color-button-bg-light);
+    background-color: #f9f9f9;
   }
 }
